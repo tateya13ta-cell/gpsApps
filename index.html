@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#071c2c" />
+  <meta name="description" content="ระบบสำรวจคู่แข่ง วิเคราะห์ตลาด และตั้งราคาสำหรับชาวเจ้าสมุทร" />
+  <title>ชาวเจ้าสมุทร — Competitor Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">ชจ</div><div class="brand-text"><h1>ชาวเจ้าสมุทร</h1><small>Competitor Intelligence</small></div></div>
+    <nav id="desktopNav">
+      <button class="nav-btn active" data-page="dashboard"><span class="nav-icon">◫</span><span class="nav-label">ภาพรวม</span></button>
+      <button class="nav-btn" data-page="competitors"><span class="nav-icon">◎</span><span class="nav-label">สำรวจคู่แข่ง</span></button>
+      <button class="nav-btn" data-page="pricing"><span class="nav-icon">฿</span><span class="nav-label">ตั้งราคา</span></button>
+      <button class="nav-btn" data-page="analysis"><span class="nav-icon">↗</span><span class="nav-label">วิเคราะห์เชิงลึก</span></button>
+    </nav>
+    <div class="side-footer">ข้อมูลเก็บในอุปกรณ์นี้<br>ใช้เมนูส่งออกเพื่อสำรองข้อมูล</div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><h2 id="pageTitle">ภาพรวมตลาด</h2><p id="pageSubtitle">เห็นราคา คู่แข่ง และโอกาสในหน้าเดียว</p></div>
+      <div class="top-actions">
+        <button class="btn" id="importBtn">⇧ <span class="desktop-label">นำเข้าข้อมูล</span></button>
+        <button class="btn" id="exportBtn">⇩ <span class="desktop-label">ส่งออก</span></button>
+        <button class="btn primary" id="addBtn">＋ <span class="desktop-label">เพิ่มคู่แข่ง</span></button>
+        <input type="file" id="importFile" accept="application/json" hidden>
+      </div>
+    </header>
+
+    <section class="page active" id="dashboardPage">
+      <div class="grid kpis" id="kpiCards"></div>
+      <div class="grid two-col">
+        <div class="card panel">
+          <div class="panel-head"><div><h3>ราคาเทียบตามน้ำหนักสินค้าของเรา</h3><span>ปรับทุกแบรนด์ให้เป็นน้ำหนักเดียวกัน</span></div><span id="chartWeight"></span></div>
+          <div class="chart" id="priceChart"></div>
+        </div>
+        <div class="card panel"><div class="panel-head"><h3>ข้อค้นพบสำคัญ</h3><span>วิเคราะห์อัตโนมัติ</span></div><div class="insights" id="insightList"></div></div>
+      </div>
+      <div class="strategy-banner"><div><b id="strategyTitle">กำลังวิเคราะห์กลยุทธ์...</b><p id="strategyText"></p></div><div class="strategy-pill" id="strategyPill">—</div></div>
+    </section>
+
+    <section class="page" id="competitorsPage">
+      <div class="toolbar">
+        <div class="field search"><input id="searchInput" placeholder="ค้นหาแบรนด์ สินค้า ช่องทาง..." /></div>
+        <div class="field"><select id="channelFilter"><option value="">ทุกช่องทาง</option></select></div>
+        <div class="field"><select id="typeFilter"><option value="">ทุกประเภท</option><option>คู่แข่งตรง</option><option>หมวดเดียวกัน</option><option>คู่แข่งทางอ้อม</option></select></div>
+        <button class="btn" id="csvBtn">CSV</button>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>คู่แข่ง</th><th>ช่องทาง</th><th>ประเภท</th><th>น้ำหนัก</th><th>ราคาที่ใช้</th><th>บาท/กรัม</th><th>เทียบน้ำหนักเรา</th><th>คะแนน</th><th>จุดขาย / ข้อสังเกต</th><th></th></tr></thead><tbody id="competitorTable"></tbody></table></div>
+      <div class="competitor-cards" id="competitorCards"></div>
+    </section>
+
+    <section class="page" id="pricingPage">
+      <div class="grid pricing-layout">
+        <div class="card form-card">
+          <h3 class="section-title">ต้นทุนสินค้า</h3>
+          <div class="form-grid" id="pricingForm"></div>
+          <div class="divider"></div>
+          <h3 class="section-title">เงื่อนไขการค้า</h3>
+          <div class="form-grid" id="tradeForm"></div>
+        </div>
+        <div>
+          <div class="result-hero"><div class="result-label">ราคาขายปลีกแนะนำ</div><div class="result-price" id="recommendedPrice">฿—</div><div class="result-sub" id="resultSub"></div></div>
+          <div class="grid scenario-grid" id="scenarioGrid"></div>
+          <div class="card panel" style="margin-top:15px"><div class="panel-head"><h3>คำแนะนำการต่อรองกับ Buyer</h3><span>อิงต้นทุนและราคาตลาด</span></div><div class="insights" id="pricingAdvice"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="analysisPage">
+      <div class="grid analysis-grid">
+        <div class="card panel"><div class="panel-head"><h3>โครงสร้างตลาด</h3><span>Price Position</span></div><div class="matrix" id="marketMatrix"></div></div>
+        <div class="card panel"><div class="panel-head"><h3>คู่แข่งที่ต้องจับตา</h3><span>คะแนนสินค้า + แพ็ก + ความต่าง</span></div><div class="competitor-list" id="rankList"></div></div>
+        <div class="card panel"><div class="panel-head"><h3>ช่องว่างที่แบรนด์ควรยึด</h3><span>Opportunity Map</span></div><div class="insights" id="opportunityList"></div></div>
+        <div class="card panel"><div class="panel-head"><h3>แผนตอบโต้</h3><span>Action Plan</span></div><div class="insights" id="actionList"></div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="mobile-nav" id="mobileNav">
+  <button class="active" data-page="dashboard"><b>◫</b>ภาพรวม</button><button data-page="competitors"><b>◎</b>คู่แข่ง</button><button data-page="pricing"><b>฿</b>ราคา</button><button data-page="analysis"><b>↗</b>วิเคราะห์</button>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-head"><h3 id="modalTitle">เพิ่มข้อมูลคู่แข่ง</h3><button class="btn sm" id="closeModal">✕</button></div>
+    <form id="competitorForm">
+      <div class="modal-body"><div class="form-grid" id="competitorFormFields"></div></div>
+      <div class="modal-foot"><button type="button" class="btn" id="cancelModal">ยกเลิก</button><button type="submit" class="btn primary">บันทึกข้อมูล</button></div>
+    </form>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
