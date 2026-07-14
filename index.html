@@ -3,84 +3,101 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f6f4ef">
+  <meta name="theme-color" content="#062a55">
   <meta name="description" content="ระบบสำรวจคู่แข่ง คำนวณต้นทุนวัตถุดิบ และตั้งราคาสำหรับ ช.เจ้าสมุทร">
-  <title>ช.เจ้าสมุทร — Market & Costing</title>
+  <title>ช.เจ้าสมุทร — Business Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles-v2.css">
+  <link rel="stylesheet" href="styles-v3.css">
 </head>
 <body>
 <div class="app-shell">
   <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-mark">ช.</div>
-      <div><h1>ช.เจ้าสมุทร</h1><p>Market & Costing</p></div>
+    <div class="brand brand-v3">
+      <div class="brand-anchor">⚓</div>
+      <div class="brand-name-th">ช.เจ้าสมุทร</div>
+      <div class="brand-tagline">SEAFOOD SNACK</div>
     </div>
     <nav class="nav" id="desktopNav">
       <button class="nav-item active" data-page="dashboard"><span>⌂</span><b>ภาพรวม</b></button>
-      <button class="nav-item" data-page="competitors"><span>◉</span><b>สำรวจคู่แข่ง</b></button>
-      <button class="nav-item" data-page="costing"><span>฿</span><b>ต้นทุนและราคา</b></button>
+      <button class="nav-item" data-page="competitors"><span>⌕</span><b>สำรวจคู่แข่ง</b></button>
+      <button class="nav-item" data-page="costing"><span>▦</span><b>ต้นทุนและราคา</b></button>
     </nav>
-    <div class="sidebar-note">
-      <b>บันทึกอัตโนมัติ</b>
-      <span>ข้อมูลและรูปภาพเก็บในอุปกรณ์นี้</span>
-    </div>
+    <div class="sidebar-art" aria-hidden="true"><span class="wave-line wave-1"></span><span class="wave-line wave-2"></span><span class="boat">⌁</span></div>
+    <div class="sidebar-account"><span>⚓</span><b>ช.เจ้าสมุทร</b><i>⌄</i></div>
   </aside>
 
   <main class="main">
     <header class="topbar">
       <div>
         <div class="eyebrow">ช.เจ้าสมุทร Business Tool</div>
-        <h2 id="pageTitle">ภาพรวมธุรกิจ</h2>
-        <p id="pageSubtitle">เห็นคู่แข่ง ต้นทุน และราคาที่ควรขายในหน้าเดียว</p>
+        <h2 id="pageTitle">ภาพรวมธุรกิจและการตั้งราคา</h2>
+        <p id="pageSubtitle">เครื่องมือสำรวจคู่แข่ง วิเคราะห์ต้นทุน และแนะนำราคา</p>
       </div>
-      <div class="data-actions">
-        <button class="icon-btn" id="importBtn" title="นำเข้าข้อมูล">↑</button>
-        <button class="icon-btn" id="exportBtn" title="สำรองข้อมูล">↓</button>
-        <input type="file" id="importFile" accept="application/json" hidden>
+      <div class="topbar-right">
+        <div class="date-chip"><span>▣</span><b id="currentDate">—</b><i>⌄</i></div>
+        <button class="btn primary top-add-btn" id="dashboardAddCompetitor">＋ เพิ่มรายการคู่แข่ง</button>
+        <div class="data-actions">
+          <button class="icon-btn" id="importBtn" title="นำเข้าข้อมูล">↑</button>
+          <button class="icon-btn" id="exportBtn" title="สำรองข้อมูล">↓</button>
+          <input type="file" id="importFile" accept="application/json" hidden>
+        </div>
       </div>
     </header>
+    <button id="quickAddCompetitor" class="hidden" type="button" aria-hidden="true"></button>
 
     <section class="page active" id="dashboardPage">
-      <div class="hero-card">
-        <div>
-          <span class="hero-badge">เริ่มงานจากตรงนี้</span>
-          <h3>เก็บข้อมูลจริง แล้วให้ระบบช่วยตัดสินใจ</h3>
-          <p>ถ่ายรูปสินค้าคู่แข่งจากหน้าร้าน หรือใส่สูตรวัตถุดิบเพื่อดูต้นทุนต่อแพ็กและราคาขายที่ยังมีกำไร</p>
-        </div>
-        <div class="hero-actions">
-          <button class="btn primary" id="quickAddCompetitor">＋ ถ่ายรูปคู่แข่ง</button>
-          <button class="btn secondary" data-go="costing">คำนวณต้นทุน</button>
-        </div>
-      </div>
+      <div class="kpi-grid dashboard-kpis" id="kpiCards"></div>
 
-      <div class="kpi-grid" id="kpiCards"></div>
-
-      <div class="dashboard-grid">
-        <article class="panel chart-panel">
-          <div class="panel-head">
-            <div><span class="section-kicker">PRICE CHECK</span><h3>ราคาเทียบตามน้ำหนักของเรา</h3></div>
-            <span class="soft-pill" id="chartWeight">—</span>
-          </div>
-          <div class="price-chart" id="priceChart"></div>
-        </article>
-        <article class="panel">
-          <div class="panel-head">
-            <div><span class="section-kicker">NEXT ACTION</span><h3>สิ่งที่ควรทำต่อ</h3></div>
-          </div>
-          <div class="insight-list" id="dashboardInsights"></div>
-        </article>
-      </div>
-
-      <article class="panel recent-panel">
-        <div class="panel-head">
-          <div><span class="section-kicker">RECENT SURVEY</span><h3>คู่แข่งล่าสุด</h3></div>
+      <article class="panel dashboard-competitors-panel">
+        <div class="panel-head compact-head">
+          <div><span class="section-icon">▧</span><h3>คู่แข่งล่าสุด</h3></div>
           <button class="text-btn" data-go="competitors">ดูทั้งหมด →</button>
         </div>
-        <div class="recent-list" id="recentCompetitors"></div>
+        <div class="dashboard-competitor-grid" id="recentCompetitors"></div>
       </article>
+
+      <div class="dashboard-lower-grid">
+        <article class="panel dashboard-cost-panel">
+          <div class="panel-head compact-head">
+            <div><span class="section-icon">♜</span><h3>ต้นทุนวัตถุดิบและการผลิต</h3></div>
+            <button class="btn ghost small" data-go="costing">✎ แก้ไขต้นทุน</button>
+          </div>
+          <div class="dashboard-table-wrap">
+            <table class="dashboard-cost-table">
+              <thead><tr><th>วัตถุดิบ</th><th>ปริมาณที่ซื้อ</th><th>ราคาที่ซื้อ</th><th>ปริมาณที่ใช้</th><th>สูญเสีย (%)</th><th>ต้นทุน</th></tr></thead>
+              <tbody id="dashboardCostRows"></tbody>
+            </table>
+          </div>
+          <div class="cost-equation" id="dashboardCostEquation"></div>
+          <p class="dashboard-note" id="dashboardCostNote"></p>
+        </article>
+
+        <div class="dashboard-price-column">
+          <article class="panel recommendation-panel">
+            <div class="recommendation-head"><span>♛</span><h3>ราคาแนะนำ</h3><i>★</i></div>
+            <div class="recommendation-body">
+              <div class="recommendation-main">
+                <span>ราคาขายปลีกแนะนำ</span>
+                <strong id="dashboardRecommendedPrice">฿—</strong>
+                <small id="dashboardPackLabel">ต่อแพ็ก</small>
+              </div>
+              <div class="recommendation-details" id="dashboardPriceDetails"></div>
+            </div>
+          </article>
+
+          <article class="panel dashboard-chart-panel">
+            <div class="panel-head compact-head">
+              <div><span class="section-icon gold">♜</span><h3>เปรียบเทียบราคาตลาด <small id="chartWeight">—</small></h3></div>
+            </div>
+            <div class="price-chart" id="priceChart"></div>
+            <div class="chart-source">ⓘ ข้อมูลจากการสำรวจที่บันทึกในระบบ</div>
+          </article>
+        </div>
+      </div>
+      <div id="dashboardInsights" hidden></div>
     </section>
 
     <section class="page" id="competitorsPage">
@@ -88,145 +105,56 @@
         <div><h3>สำรวจคู่แข่ง</h3><p>ถ่ายรูปสินค้า เก็บราคา น้ำหนัก โปรโมชั่น และข้อสังเกตจากหน้าร้าน</p></div>
         <button class="btn primary" id="addCompetitorBtn">＋ เพิ่มคู่แข่ง</button>
       </div>
-
       <div class="filter-bar">
         <label class="search-field"><span>⌕</span><input id="searchInput" placeholder="ค้นหาแบรนด์ สินค้า หรือร้าน"></label>
         <select id="channelFilter"><option value="">ทุกช่องทาง</option></select>
         <select id="typeFilter"><option value="">ทุกประเภท</option><option>คู่แข่งตรง</option><option>หมวดเดียวกัน</option><option>คู่แข่งทางอ้อม</option></select>
         <button class="btn ghost" id="csvBtn">ส่งออก CSV</button>
       </div>
-
       <div class="competitor-grid" id="competitorGrid"></div>
     </section>
 
     <section class="page" id="costingPage">
       <div class="section-intro">
-        <div><h3>ต้นทุนวัตถุดิบและราคาขาย</h3><p>ใส่สูตรผลิตหนึ่งรอบ ระบบจะคำนวณต้นทุนต่อแพ็กและราคาที่เหมาะสมให้ทันที</p></div>
+        <div><h3>ต้นทุนวัตถุดิบและราคาขาย</h3><p>ใส่สูตรผลิตหนึ่งรอบ ระบบจะคำนวณต้นทุนต้อแพ็กและราคาที่เหมาะสมให้ทันที</p></div>
         <button class="btn ghost" id="resetCostingBtn">เริ่มสูตรใหม่</button>
       </div>
-
-      <div class="step-strip">
-        <div class="step active"><b>1</b><span>สูตรผลิต</span></div>
-        <div class="step active"><b>2</b><span>ต้นทุนต่อแพ็ก</span></div>
-        <div class="step active"><b>3</b><span>ราคาขาย</span></div>
-      </div>
-
+      <div class="step-strip"><div class="step active"><b>1</b><span>สูตรผลิต</span></div><div class="step active"><b>2</b><span>ต้นทุนต้อแพ็ก</span></div><div class="step active"><b>3</b><span>ราคาขาย</span></div></div>
       <div class="costing-layout">
         <div class="costing-main">
-          <article class="panel form-panel">
-            <div class="panel-head">
-              <div><span class="section-kicker">BATCH SETUP</span><h3>ข้อมูลการผลิตต่อรอบ</h3></div>
-            </div>
-            <div class="simple-form three" id="batchForm"></div>
-          </article>
-
+          <article class="panel form-panel"><div class="panel-head"><div><span class="section-kicker">BATCH SETUP</span><h3>ข้อมูลการผลิตต่อรอบ</h3></div></div><div class="simple-form three" id="batchForm"></div></article>
           <article class="panel ingredient-panel">
-            <div class="panel-head">
-              <div><span class="section-kicker">RECIPE COST</span><h3>วัตถุดิบในสูตร</h3></div>
-              <button class="btn small" id="addIngredientBtn">＋ เพิ่มวัตถุดิบ</button>
-            </div>
-            <div class="ingredient-head">
-              <span>วัตถุดิบ</span><span>ซื้อมา</span><span>ราคา</span><span>ใช้ในสูตร</span><span>สูญเสีย</span><span>ต้นทุน</span><span></span>
-            </div>
+            <div class="panel-head"><div><span class="section-kicker">RECIPE COST</span><h3>วัตถุดิบในสูตร</h3></div><button class="btn small" id="addIngredientBtn">＋ เพิ่มวัตถุดิบ</button></div>
+            <div class="ingredient-head"><span>วัตถุดิบ</span><span>ซื้อมา</span><span>ราคา</span><span>ใช้ในสูตร</span><span>สูญเสีย</span><span>ต้นทุน</span><span></span></div>
             <div class="ingredient-list" id="ingredientList"></div>
             <div class="ingredient-help">ตัวอย่าง: ซื้อปลา 1,000 กรัม ราคา 120 บาท และใช้ในสูตร 500 กรัม ระบบคิดต้นทุนให้ 60 บาท</div>
           </article>
-
-          <article class="panel form-panel">
-            <div class="panel-head"><div><span class="section-kicker">OTHER COSTS</span><h3>ค่าใช้จ่ายการผลิตอื่น</h3></div></div>
-            <div class="simple-form three" id="otherCostForm"></div>
-          </article>
-
-          <article class="panel form-panel">
-            <div class="panel-head"><div><span class="section-kicker">TRADE TERMS</span><h3>เงื่อนไขการขาย</h3></div></div>
-            <div class="simple-form three" id="tradeForm"></div>
-          </article>
+          <article class="panel form-panel"><div class="panel-head"><div><span class="section-kicker">OTHER COSTS</span><h3>ค่าใช้จ่ายการผลิตอื่น</h3></div></div><div class="simple-form three" id="otherCostForm"></div></article>
+          <article class="panel form-panel"><div class="panel-head"><div><span class="section-kicker">TRADE TERMS</span><h3>เงื่อนไขการขาย</h3></div></div><div class="simple-form three" id="tradeForm"></div></article>
         </div>
-
         <aside class="cost-summary">
-          <div class="summary-card sticky-card">
-            <span class="summary-label">ต้นทุนจริงต่อแพ็ก</span>
-            <div class="summary-cost" id="costPerPack">฿—</div>
-            <div class="cost-breakdown" id="costBreakdown"></div>
-            <div class="summary-divider"></div>
-            <span class="summary-label">ราคาขายปลีกแนะนำ</span>
-            <div class="recommended-price" id="recommendedPrice">฿—</div>
-            <div class="price-context" id="priceContext"></div>
-          </div>
+          <div class="summary-card sticky-card"><span class="summary-label">ต้นทุนจริงต้อแพ็ก</span><div class="summary-cost" id="costPerPack">฿—</div><div class="cost-breakdown" id="costBreakdown"></div><div class="summary-divider"></div><span class="summary-label">ราคาขายปลีกแนะนำ</span><div class="recommended-price" id="recommendedPrice">฿—</div><div class="price-context" id="priceContext"></div></div>
           <div class="scenario-list" id="scenarioList"></div>
-          <div class="panel compact-panel">
-            <div class="panel-head"><div><span class="section-kicker">BUYER CHECK</span><h3>ก่อนคุยกับห้าง</h3></div></div>
-            <div class="insight-list" id="pricingAdvice"></div>
-          </div>
+          <div class="panel compact-panel"><div class="panel-head"><div><span class="section-kicker">BUYER CHECK</span><h3>ก่อนคุยกับห้าง</h3></div></div><div class="insight-list" id="pricingAdvice"></div></div>
         </aside>
       </div>
     </section>
   </main>
 </div>
 
-<nav class="bottom-nav">
-  <button class="active" data-page="dashboard"><span>⌂</span>ภาพรวม</button>
-  <button data-page="competitors"><span>◉</span>คู่แข่ง</button>
-  <button data-page="costing"><span>฿</span>ต้นทุน</button>
-</nav>
+<nav class="bottom-nav"><button class="active" data-page="dashboard"><span>⌂</span>ภาพรวม</button><button data-page="competitors"><span>⌕</span>คู่แข่ง</button><button data-page="costing"><span>▦</span>ต้นทุน</button></nav>
 
 <div class="modal-backdrop" id="competitorModal">
   <div class="modal competitor-modal">
-    <div class="modal-head">
-      <div><span class="section-kicker">STORE SURVEY</span><h3 id="modalTitle">เพิ่มคู่แข่ง</h3></div>
-      <button class="close-btn" id="closeModal">×</button>
-    </div>
+    <div class="modal-head"><div><span class="section-kicker">STORE SURVEY</span><h3 id="modalTitle">เพิ่มคู่แข่ง</h3></div><button class="close-btn" id="closeModal">×</button></div>
     <form id="competitorForm">
       <div class="modal-body">
         <div class="photo-uploader" id="photoUploader">
           <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
-          <div class="photo-preview" id="photoPreview">
-            <div class="photo-placeholder"><span>▣</span><b>ถ่ายรูปสินค้าหรือชั้นวาง</b><small>กดเพื่อเปิดกล้อง หรือเลือกรูปจากเครื่อง</small></div>
-          </div>
-          <div class="photo-actions">
-            <button type="button" class="btn secondary" id="takePhotoBtn">ถ่าย / เลือกรูป</button>
-            <button type="button" class="btn ghost hidden" id="removePhotoBtn">ลบรูป</button>
-          </div>
+          <div class="photo-preview" id="photoPreview"><div class="photo-placeholder"><span>▣</span><b>ถ่ายรูปสินค้าหรือชั้นวาง</b><small>กดเพื่อเปิดกล้อง หรือเลือกรูปจากเครื่อง</small></div></div>
+          <div class="photo-actions"><button type="button" class="btn secondary" id="takePhotoBtn">ถ่าย / เลือกรูป</button><button type="button" class="btn ghost hidden" id="removePhotoBtn">ลบรูป</button></div>
         </div>
-
-        <div class="form-section">
-          <h4>ข้อมูลสำคัญ</h4>
-          <div class="simple-form two">
-            <label><span>แบรนด์ *</span><input name="brand" required placeholder="เช่น ทาโร"></label>
-            <label><span>ชื่อสินค้า / รสชาติ *</span><input name="product" required placeholder="เช่น ปลาเส้นรสเข้มข้น"></label>
-            <label><span>ร้าน / ช่องทาง *</span><input name="channel" required placeholder="เช่น Big C ราชดำริ"></label>
-            <label><span>ประเภทคู่แข่ง</span><select name="type"><option>คู่แข่งตรง</option><option selected>หมวดเดียวกัน</option><option>คู่แข่งทางอ้อม</option></select></label>
-            <label><span>น้ำหนักสุทธิ (กรัม) *</span><input name="weight" type="number" min="0.01" step="0.01" required></label>
-            <label><span>ราคาปกติ (บาท) *</span><input name="normalPrice" type="number" min="0.01" step="0.01" required></label>
-            <label><span>ราคาโปร (ถ้ามี)</span><input name="promoPrice" type="number" min="0" step="0.01"></label>
-            <label><span>ตำแหน่งวางสินค้า</span><input name="shelf" placeholder="เช่น ระดับสายตา / หน้าแคชเชียร์"></label>
-          </div>
-        </div>
-
-        <div class="form-section">
-          <h4>ประเมินอย่างรวดเร็ว</h4>
-          <div class="rating-grid" id="ratingGrid"></div>
-        </div>
-
-        <div class="form-section">
-          <h4>สิ่งที่เห็นจากหน้าร้าน</h4>
-          <div class="simple-form one">
-            <label><span>จุดขาย / คำเคลม</span><textarea name="sellingPoint" placeholder="เช่น ปลาแท้ รสเผ็ด โปรตีนสูง แพ็กเปิดปิดได้"></textarea></label>
-            <label><span>จุดอ่อน / ข้อสังเกต</span><textarea name="note" placeholder="เช่น แพ็กไม่เด่น สินค้าเหลือน้อย โปรแรงผิดปกติ"></textarea></label>
-            <label><span>ลิงก์สินค้า (ถ้ามี)</span><input name="url" type="url" placeholder="https://..."></label>
-          </div>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button type="button" class="btn ghost" id="cancelModal">ยกเลิก</button>
-        <button type="submit" class="btn primary">บันทึกข้อมูล</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="image-lightbox" id="imageLightbox"><button id="closeLightbox">×</button><img id="lightboxImage" alt="รูปคู่แข่ง"></div>
-<div class="toast" id="toast"></div>
-<script src="app.js"></script>
-</body>
-</html>
+        <div class="form-section"><h4>ข้อมูลสำคัญ</h4><div class="simple-form two">
+          <label><span>แบรนด์ *</span><input name="brand" required placeholder="เช่น ทาโร"></label>
+          <label><span>ชื่อสินค้า / รสชาติ *</span><input name="product" required placeholder="เช่น ปลาเส้นรสเข้มข้น"></label>
+          <label><span>ร้าน / ช่องทาง *</span><input name="channel" required placehlder="เช่น Big C ราชดะริ��𽱅����(����������񱅉�����������o�⏂�Â��⏂�_������#������#���������͕���Ё�������������ѥ���������#������#����W�⏂���ѥ�����ѥ���͕���ѕ���⯂⇂⟂�S����S��ׂ⋂⟂���ǂ�d��ѥ�����ѥ���������#������#����_��˂��ⷂ�'�ⷂ���ѥ����͕�����𽱅����(����������񱅉�����������g��'��ς⯂�g��ǂ��⫂���_��c��Ѐ����⏂�ǂℤ�����������Ё�����ݕ���Ј������յ��Ȉ��������Ĉ��ѕ�����Ĉ�ɕ�եɕ��𽱅����(����������񱅉����������⏂�˂���˂�o����W��Ѐ���k��˂�\������������Ё����􉹽ɵ��Aɥ���������յ��Ȉ��������Ĉ��ѕ�����Ĉ�ɕ�եɕ��𽱅����(����������񱅉����������⏂�˂���˂���o�∀���[��'��˂⇂�ғ��7��Ɩ�WB��S�'&���&�6R"G�S�&�V�&W""֖��#"7FW�#�#����&V����&V���7���^�>��������~�~�.�~���N���N���#��7��Ɩ�WB��S�'6�V�b"�6V���FW#�.��������>��N������.�.�^�"��������.��N������^�.�>��#����&V����F�c���F�c��F�b6�73�&f�&��6V7F���#�ƃC����>����N�����.���.�~�>�~�N��>�~�s���C��F�b6�73�'&F��r�w&�B"�C�'&F��tw&�B#���F�c���F�c��F�b6�73�&f�&��6V7F���#�ƃC����N���~�~�^������~�����.��������.�>���.�����C��F�b6�73�'6���R�f�&���R#���&V���7�������N�.�.�"��N�>��N�^���7���FW�F&V��S�'6V�Ɩ�u���B"�6V��FW#�.����������^�.��~���>������~�B�.���>�^�^�������r����~�����N�N���N�N�~�N��#���FW�F&V����&V����&V���7�������N����������.��������~���S��7���FW�F&V��S�&��FR"�6V��FW#�.�����������~��N�����N�������N���N���.����^�~���������"�.���>��>�~���N�N����^�B#���FW�F&V����&V����&V���7���^�N�~������N���N���"��n���.��R���7��Ɩ�WB��S�'W&�"G�S�'W&�"�6V��FW#�&�GG3������#����&V����F�c���F�c���F�c��F�b6�73�&��F��f��B#��'WGF��G�S�&'WGF��"6�73�&'F�v��7B"�C�&6�6V���F�#��.���^�N���'WGF����'WGF��G�S�'7V&֗B"6�73�&'F�&��'�#�������~�n��.��������S��'WGF�����F�c���f�&����F�c���F�c��F�b6�73�&��vR�Ɩv�F&��"�C�&��vTƖv�F&��#��'WGF���C�&6��6TƖv�F&��#�9s��'WGF���Ɩ�r�C�&Ɩv�F&����vR"�C�.�>�����N������.���r#���F�c��F�b6�73�'F�7B"�C�'F�7B#���F�c��67&�B7&3�&�2#���67&�C��67&�B7&3�&F6�&�&B�c2�2#���67&�C���&�G�����F���
